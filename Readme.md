@@ -1,0 +1,1 @@
+Simply open `ìndex.html`
