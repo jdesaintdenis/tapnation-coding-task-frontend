@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Marketing Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css"
+    />
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useRef, useEffect } = React;
+      const { Chart } = window;
+
+      const MARKETING_DATA = {
+        data: {
+          "2021-01-10": {
+            Facebook: {
+              spend: 3200,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1300,
+              cohort_revenue_d2: 1500,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 4000,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+            GoogleAds: {
+              spend: 4900,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1300,
+              cohort_revenue_d2: 1500,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 6000,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+            Applovin: {
+              spend: 2250,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1300,
+              cohort_revenue_d2: 1500,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 2000,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+            total: {
+              spend: 2250,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1300,
+              cohort_revenue_d2: 1500,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 2000,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+          },
+          "2021-01-11": {
+            Facebook: {
+              spend: 4000,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1400,
+              cohort_revenue_d2: 1400,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 2200,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+            GoogleAds: {
+              spend: 6200,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1400,
+              cohort_revenue_d2: 400,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 3900,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+            Applovin: {
+              spend: 2000,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1400,
+              cohort_revenue_d2: 1400,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 1750,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+            total: {
+              spend: 2250,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1300,
+              cohort_revenue_d2: 1500,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 2000,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+          },
+          "2021-01-12": {
+            Facebook: {
+              spend: 4500,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1500,
+              cohort_revenue_d2: 1600,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 2600,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+            GoogleAds: {
+              spend: 6800,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 500,
+              cohort_revenue_d2: 600,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 3400,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+            Applovin: {
+              spend: 2250,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1500,
+              cohort_revenue_d2: 1600,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 2000,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+            total: {
+              spend: 2250,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1300,
+              cohort_revenue_d2: 1500,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 2000,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+          },
+          Total: {
+            Facebook: {
+              spend: 11700,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1500,
+              cohort_revenue_d2: 1600,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 2000,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+            GoogleAds: {
+              spend: 17900,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 500,
+              cohort_revenue_d2: 600,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 2000,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+            Applovin: {
+              spend: 2250,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1500,
+              cohort_revenue_d2: 1600,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 1850,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+            total: {
+              spend: 2250,
+              cohort_revenue_d0: 1100,
+              cohort_revenue_d1: 1300,
+              cohort_revenue_d2: 1500,
+              cohort_revenue_d3: 1700,
+              cohort_revenue_d7: 1800,
+              cohort_revenue_d14: 2000,
+              cohort_revenue_d30: 2100,
+              cohort_revenue_d90: 2500,
+              cohort_revenue_d120: 2600,
+              daily_revenue: 2000,
+              installs: 5000,
+              ret_d1: 0.28,
+              ret_d2: 0.3,
+              ret_d3: 0.4,
+              ret_d7: 0.5,
+              ret_d14: 0.51,
+              ret_d30: 0.55,
+            },
+          },
+        },
+      };
+
+      const processData = (data) => {
+        const channels = Object.keys(Object.values(data)[0]).filter(
+          (key) => key !== "total"
+        ).sort();
+        const dates = Object.keys(data).filter((key) => key !== "Total");
+
+        return {
+          channels,
+          dates,
+          metrics: {
+            spend: channels.reduce((acc, channel) => {
+              acc[channel] = dates.map((date) => data[date][channel].spend);
+              return acc;
+            }, {}),
+            revenue: channels.reduce((acc, channel) => {
+              acc[channel] = dates.map(
+                (date) => data[date][channel].daily_revenue
+              );
+              return acc;
+            }, {}),
+          },
+        };
+      };
+
+      const LineChart = ({ metric, data }) => {
+        const chartRef = useRef(null);
+        const [chartInstance, setChartInstance] = useState(null);
+
+        useEffect(() => {
+          const createChart = () => {
+            if (chartInstance) {
+              chartInstance.destroy();
+            }
+
+            const ctx = chartRef.current.getContext("2d");
+            const processedData = processData(data);
+
+            const colors = ["#E91E63", "#01A9F4", "#FEC109"];
+
+            const newChartInstance = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: processedData.dates,
+                datasets: processedData.channels.map((channel, index) => ({
+                  label: channel,
+                  data: processedData.metrics[metric][channel],
+                  borderColor: colors[index % colors.length],
+                  fill: false,
+                  tension: 0.4
+                })),
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                  title: {
+                    display: true,
+                    text: `${
+                      metric.charAt(0).toUpperCase() + metric.slice(1)
+                    } Trend`,
+                  },
+                },
+              },
+            });
+
+            setChartInstance(newChartInstance);
+          };
+
+          createChart();
+
+          // Without this the resizing sometimes fails
+          window.addEventListener("resize", createChart);
+
+          return () => {
+            window.removeEventListener("resize", createChart);
+            if (chartInstance) {
+              chartInstance.destroy();
+            }
+          };
+        }, [metric, data]);
+
+        return (
+          <div style={{ position: "relative", height: "400px" }}>
+            <canvas ref={chartRef}></canvas>
+          </div>
+        );
+      };
+
+      const MarketingDashboard = () => {
+        const [selectedMetric, setSelectedMetric] = useState("spend");
+        const processedData = processData(MARKETING_DATA.data);
+        const channelData = MARKETING_DATA.data["Total"];
+
+        useEffect(() => {
+          $("#marketing-table").DataTable({
+            pageLength: 10,
+            lengthMenu: [
+              [10, 25, 50, -1],
+              [10, 25, 50, "All"],
+            ],
+            scrollX: true,
+          });
+        }, []);
+
+        return (
+          <div>
+            <h1 style={{ textAlign: "center" }}>
+              Marketing Performance Dashboard
+            </h1>
+
+            <select
+              value={selectedMetric}
+              onChange={(e) => setSelectedMetric(e.target.value)}
+            >
+              <option value="spend">Spend</option>
+              <option value="revenue">Revenue</option>
+            </select>
+
+            <div className="chart-container">
+              <div className="chart">
+                <LineChart metric={selectedMetric} data={MARKETING_DATA.data} />
+              </div>
+            </div>
+
+            <table
+              id="marketing-table"
+              className="display"
+              style={{ width: "100%" }}
+            >
+              <thead>
+                <tr>
+                  <th>Network</th>
+                  <th>Spend</th>
+                  <th>Installs</th>
+                  <th>Cohort Revenue D0</th>
+                  <th>Cohort Revenue D1</th>
+                  <th>Cohort Revenue D2</th>
+                  <th>Cohort Revenue D3</th>
+                  <th>Cohort Revenue D7</th>
+                  <th>Cohort Revenue D14</th>
+                  <th>Cohort Revenue D30</th>
+                  <th>Cohort Revenue D90</th>
+                  <th>Cohort Revenue D120</th>
+                </tr>
+              </thead>
+              <tbody>
+                {processedData.channels.map((channel) => (
+                  <tr key={channel}>
+                    <td>{channel}</td>
+                    <td>{channelData[channel].spend}</td>
+                    <td>{channelData[channel].installs}</td>
+                    <td>{channelData[channel].cohort_revenue_d0}</td>
+                    <td>{channelData[channel].cohort_revenue_d1}</td>
+                    <td>{channelData[channel].cohort_revenue_d2}</td>
+                    <td>{channelData[channel].cohort_revenue_d3}</td>
+                    <td>{channelData[channel].cohort_revenue_d7}</td>
+                    <td>{channelData[channel].cohort_revenue_d14}</td>
+                    <td>{channelData[channel].cohort_revenue_d30}</td>
+                    <td>{channelData[channel].cohort_revenue_d90}</td>
+                    <td>{channelData[channel].cohort_revenue_d120}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      };
+
+      ReactDOM.render(<MarketingDashboard />, document.getElementById("root"));
+    </script>
+  </body>
+</html>
